@@ -4,14 +4,24 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kickstand — Floating Visual Reference</title>
-    <script type="module" crossorigin src="/assets/index-CoOwdp-F.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DdHERJan.css">
+    <script type="module" crossorigin src="/assets/index-Kgz4qDoN.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-C3QLXfYV.css">
   </head>
   <body>
     <main class="kickstand-app">
       <header class="kickstand-header">
-        <p class="kickstand-wordmark">Kickstand</p>
-        <p class="kickstand-tagline">Keep your reference in sight.</p>
+        <div class="kickstand-brand">
+          <svg class="kickstand-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <rect x="3" y="4" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <path d="M16.5 14 21 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+            <path d="M18 20h6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+          </svg>
+          <div class="kickstand-brand-text">
+            <p class="kickstand-wordmark">Kickstand</p>
+            <p class="kickstand-tagline">Keep your reference in sight.</p>
+          </div>
+        </div>
+        <p class="kickstand-support is-supported" id="supportBadge">PiP supported</p>
       </header>
 
       <section class="kickstand-intro">
@@ -20,11 +30,11 @@
       </section>
 
       <section class="kickstand-input" aria-label="Image input">
-        <label class="kickstand-dropzone" id="dropzoneLabel">
+        <div class="kickstand-dropzone" id="dropzone" role="button" tabindex="0" aria-label="Choose or drop an image">
           <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp" hidden />
           <span class="kickstand-dropzone-hint">Paste an image (Ctrl+V) or drop it here</span>
           <span class="kickstand-dropzone-formats">PNG, JPG, WebP</span>
-        </label>
+        </div>
         <button type="button" class="kickstand-choose-button" id="chooseButton">
           Choose image
         </button>
@@ -38,6 +48,7 @@
           <button type="button" class="kickstand-popout-button" id="popoutButton" disabled>
             Pop Out
           </button>
+          <span class="kickstand-pip-indicator" id="pipIndicator" hidden>Floating window active</span>
           <button type="button" class="kickstand-secondary-button" id="replaceButton">
             Replace image
           </button>
@@ -47,7 +58,7 @@
         </div>
       </section>
 
-      <p class="kickstand-status" id="statusMessage" role="status" aria-live="polite">
+      <p class="kickstand-status is-info" id="statusMessage" role="status" aria-live="polite" aria-atomic="true">
         Paste or choose an image to get started.
       </p>
 

@@ -68,8 +68,28 @@ body {
 
 .kickstand-header {
   display: flex;
-  align-items: baseline;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.kickstand-brand {
+  display: flex;
+  align-items: center;
   gap: var(--space-3);
+}
+
+.kickstand-mark {
+  width: 30px;
+  height: 30px;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.kickstand-brand-text {
+  display: flex;
+  flex-direction: column;
 }
 
 .kickstand-wordmark {
@@ -83,6 +103,28 @@ body {
   margin: 0;
   font-size: var(--text-sm);
   color: var(--color-text-secondary);
+}
+
+.kickstand-support {
+  margin: 0;
+  font-size: var(--text-xs);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  background: var(--color-surface);
+}
+
+.kickstand-support.is-supported {
+  color: var(--color-success);
+  border-color: var(--color-success);
+  background: var(--color-success-soft);
+}
+
+.kickstand-support.is-unsupported {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+  background: var(--color-danger-soft);
 }
 
 .kickstand-intro {
@@ -126,7 +168,8 @@ body {
 }
 
 .kickstand-dropzone:hover,
-.kickstand-dropzone:focus-within {
+.kickstand-dropzone:focus-within,
+.kickstand-dropzone:focus-visible {
   border-color: var(--color-primary);
   background: var(--color-primary-soft);
 }
@@ -200,6 +243,19 @@ body {
   align-items: center;
 }
 
+.kickstand-pip-indicator {
+  font-size: var(--text-sm);
+  color: var(--color-success);
+  background: var(--color-success-soft);
+  border: 1px solid var(--color-success);
+  border-radius: var(--radius-pill);
+  padding: var(--space-1) var(--space-3);
+}
+
+.kickstand-preview-section.is-pip-active .kickstand-preview-frame {
+  border-color: var(--color-primary);
+}
+
 .kickstand-popout-button {
   padding: var(--space-2) var(--space-5);
   font: inherit;
@@ -243,6 +299,18 @@ body {
   margin: var(--space-5) 0 0;
   font-size: var(--text-sm);
   color: var(--color-text-secondary);
+}
+
+.kickstand-status.is-info {
+  color: var(--color-text-secondary);
+}
+
+.kickstand-status.is-success {
+  color: var(--color-success);
+}
+
+.kickstand-status.is-error {
+  color: var(--color-danger);
 }
 
 .kickstand-privacy {

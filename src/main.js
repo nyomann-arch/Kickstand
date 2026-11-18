@@ -22,6 +22,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: var(--pip-image-padding);
+  overflow: hidden;
 }
 
 .pip-image {
@@ -41,7 +42,7 @@ const PIP_MAX_WIDTH = 640;
 const PIP_MAX_HEIGHT = 480;
 
 const fileInput = document.getElementById('fileInput');
-const dropzone = document.getElementById('dropzoneLabel');
+const dropzone = document.getElementById('dropzone');
 const chooseButton = document.getElementById('chooseButton');
 const replaceButton = document.getElementById('replaceButton');
 const removeButton = document.getElementById('removeButton');
@@ -49,6 +50,8 @@ const popoutButton = document.getElementById('popoutButton');
 const previewSection = document.getElementById('previewSection');
 const previewImage = document.getElementById('previewImage');
 const statusMessage = document.getElementById('statusMessage');
+const supportBadge = document.getElementById('supportBadge');
+const pipIndicator = document.getElementById('pipIndicator');
 
 const isPiPSupported = 'documentPictureInPicture' in window;
 
@@ -61,8 +64,10 @@ let isOpeningPiP = false;
 let inputRequestId = 0;
 let suppressPiPClosedStatus = false;
 
-function setStatus(message) {
+function setStatus(message, tone = 'info') {
   statusMessage.textContent = message;
+  statusMessage.classList.remove('is-info', 'is-success', 'is-error');
+  statusMessage.classList.add(`is-${tone}`);
 }
 
 function isPiPOpen() {
@@ -75,19 +80,17 @@ function updateControls() {
   const canPopOut = hasImage && isPiPSupported && !isOpeningPiP && !pipActive;
 
   popoutButton.disabled = !canPopOut;
-  if (isOpeningPiP) {
-    popoutButton.textContent = 'Opening…';
-  } else if (pipActive) {
-    popoutButton.textContent = 'PiP active';
-  } else {
-    popoutButton.textContent = 'Pop Out';
-  }
+  popoutButton.textContent = isOpeningPiP ? 'Opening…' : pipActive ? 'PiP active' : 'Pop Out';
+  popoutButton.title = isPiPSupported
+    ? ''
+    : 'Document Picture-in-Picture is not supported in this browser.';
 
-  if (!isPiPSupported) {
-    setStatus('This browser does not support Document Picture-in-Picture. Preview only.');
-  } else if (pipActive) {
-    setStatus('Floating window is open. Keep this tab open.');
-  }
+  pipIndicator.hidden = !pipActive;
+  previewSection.classList.toggle('is-pip-active', pipActive);
+
+  supportBadge.textContent = isPiPSupported ? 'PiP supported' : 'PiP unsupported';
+  supportBadge.classList.toggle('is-supported', isPiPSupported);
+  supportBadge.classList.toggle('is-unsupported', !isPiPSupported);
 }
 
 function computePipSize() {
@@ -145,22 +148,22 @@ async function handleFile(file) {
   const requestId = ++inputRequestId;
 
   if (!allowedMimeType(file)) {
-    setStatus('This image type is not supported. Use PNG, JPG, or WebP.');
+    setStatus('This image type is not supported. Use PNG, JPG, or WebP.', 'error');
     return;
   }
 
   if (file.size === 0) {
-    setStatus('This file is empty. Choose a valid image.');
+    setStatus('This file is empty. Choose a valid image.', 'error');
     return;
   }
 
   if (file.size > MAX_FILE_SIZE) {
-    setStatus('This image is too large. The maximum size is 20 MB.');
+    setStatus('This image is too large. The maximum size is 20 MB.', 'error');
     return;
   }
 
   const newUrl = URL.createObjectURL(file);
-  setStatus('Checking image…');
+  setStatus('Checking image…', 'info');
 
   let dimensions;
   try {
@@ -168,7 +171,7 @@ async function handleFile(file) {
   } catch {
     URL.revokeObjectURL(newUrl);
     if (requestId === inputRequestId) {
-      setStatus('The image could not be loaded. Try another file.');
+      setStatus('The image could not be loaded. Try another file.', 'error');
     }
     return;
   }
@@ -195,7 +198,14 @@ async function handleFile(file) {
   }
 
   revokeAfterSwitch(oldUrl);
-  setStatus(isPiPOpen() ? 'Floating window is open. Keep this tab open.' : 'Image ready to float.');
+
+  if (isPiPOpen()) {
+    setStatus('Floating window is open. Keep this tab open.', 'info');
+  } else if (!isPiPSupported) {
+    setStatus('Image ready to preview. This browser does not support Document Picture-in-Picture.', 'info');
+  } else {
+    setStatus('Image ready to float.', 'success');
+  }
   updateControls();
 }
 
@@ -225,7 +235,7 @@ function clearImage() {
   }
 
   if (oldUrl) URL.revokeObjectURL(oldUrl);
-  setStatus('Image removed.');
+  setStatus('Image removed.', 'info');
   updateControls();
 }
 
@@ -272,6 +282,17 @@ fileInput.addEventListener('change', () => {
   fileInput.value = '';
 });
 
+dropzone.addEventListener('click', () => {
+  fileInput.click();
+});
+
+dropzone.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    fileInput.click();
+  }
+});
+
 dropzone.addEventListener('dragenter', (event) => {
   if (!hasFiles(event)) return;
   event.preventDefault();
@@ -311,7 +332,7 @@ removeButton.addEventListener('click', clearImage);
 previewImage.addEventListener('error', () => {
   if (!currentBlobUrl) return;
   clearImage();
-  setStatus('The image could not be loaded. Try another file.');
+  setStatus('The image could not be loaded. Try another file.', 'error');
 });
 
 async function openPiP() {
@@ -321,7 +342,7 @@ async function openPiP() {
 
   isOpeningPiP = true;
   updateControls();
-  setStatus('Opening floating window…');
+  setStatus('Opening floating window…', 'info');
 
   let pipWin;
   try {
@@ -329,7 +350,7 @@ async function openPiP() {
     pipWin = await window.documentPictureInPicture.requestWindow({ width, height });
   } catch (error) {
     console.error('Document PiP request failed:', error);
-    setStatus('Could not open the floating window. Try again.');
+    setStatus('Could not open the floating window. Try again.', 'error');
     isOpeningPiP = false;
     updateControls();
     return;
@@ -342,7 +363,10 @@ async function openPiP() {
       } catch (error) {
         console.error('Could not close unused floating window:', error);
       }
-      setStatus(currentBlobUrl ? 'Could not open the floating window. Try again.' : 'Image removed.');
+      setStatus(
+        currentBlobUrl ? 'Could not open the floating window. Try again.' : 'Image removed.',
+        currentBlobUrl ? 'error' : 'info'
+      );
       return;
     }
 
@@ -377,11 +401,14 @@ async function openPiP() {
       pipImageElement = null;
       updateControls();
       if (!suppressStatus) {
-        setStatus(currentBlobUrl ? 'Floating window closed. Your image is still here.' : 'Floating window closed.');
+        setStatus(
+          currentBlobUrl ? 'Floating window closed. Your image is still here.' : 'Floating window closed.',
+          'info'
+        );
       }
     });
 
-    setStatus('Floating window is open. Keep this tab open.');
+    setStatus('Floating window is open. Keep this tab open.', 'info');
   } catch (error) {
     console.error('Document PiP setup failed:', error);
     pipWindow = null;
@@ -391,7 +418,7 @@ async function openPiP() {
     } catch (closeError) {
       console.error('Could not close failed floating window:', closeError);
     }
-    setStatus('Could not open the floating window. Try again.');
+    setStatus('Could not open the floating window. Try again.', 'error');
   } finally {
     isOpeningPiP = false;
     updateControls();
@@ -409,4 +436,13 @@ window.addEventListener('pagehide', (event) => {
   }
 });
 
-updateControls();
+function init() {
+  updateControls();
+  if (!isPiPSupported) {
+    setStatus('This browser does not support Document Picture-in-Picture. Preview only.', 'info');
+  } else {
+    setStatus('Paste or choose an image to get started.', 'info');
+  }
+}
+
+init();
