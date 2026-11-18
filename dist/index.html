@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kickstand — Floating Visual Reference</title>
+    <script type="module" crossorigin src="/assets/index-BLTVvmX0.js"></script>
+  </head>
+  <body>
+    <main class="kickstand-app">
+      <header class="kickstand-header">
+        <p class="kickstand-wordmark">Kickstand</p>
+        <p class="kickstand-tagline">Keep your reference in sight.</p>
+      </header>
+
+      <section class="kickstand-intro">
+        <h1>Paste, pop out, keep working.</h1>
+        <p>Turn one image into a floating reference window while you work.</p>
+      </section>
+
+      <section class="kickstand-input" aria-label="Image input">
+        <label class="kickstand-dropzone" id="dropzoneLabel">
+          <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp" hidden />
+          <span class="kickstand-dropzone-hint">Paste an image (Ctrl+V) or drop it here</span>
+          <span class="kickstand-dropzone-formats">PNG, JPG, WebP</span>
+        </label>
+        <button type="button" class="kickstand-choose-button" id="chooseButton">
+          Choose image
+        </button>
+      </section>
+
+      <section class="kickstand-preview-section" id="previewSection" hidden>
+        <div class="kickstand-preview-frame">
+          <img id="previewImage" class="kickstand-preview" alt="Image preview" />
+        </div>
+        <div class="kickstand-actions">
+          <button type="button" class="kickstand-popout-button" id="popoutButton" disabled>
+            Pop Out
+          </button>
+          <button type="button" class="kickstand-secondary-button" id="replaceButton">
+            Replace image
+          </button>
+          <button type="button" class="kickstand-secondary-button" id="removeButton">
+            Remove image
+          </button>
+        </div>
+      </section>
+
+      <p class="kickstand-status" id="statusMessage" role="status" aria-live="polite">
+        Paste or choose an image to get started.
+      </p>
+
+      <p class="kickstand-privacy">
+        Images are processed locally in your browser. Kickstand does not upload your images.
+      </p>
+    </main>
+
+  </body>
+</html>

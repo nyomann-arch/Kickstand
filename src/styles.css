@@ -1,0 +1,261 @@
+:root {
+  --color-bg: #F5F7F9;
+  --color-surface: #FFFFFF;
+  --color-surface-muted: #EEF2F5;
+  --color-text-primary: #1B2733;
+  --color-text-secondary: #657382;
+  --color-border: #DDE4EA;
+  --color-primary: #3F6893;
+  --color-primary-hover: #315477;
+  --color-primary-soft: #EAF1F7;
+  --color-focus: #85A8C7;
+  --color-danger: #B54747;
+  --color-danger-soft: #FDEEEE;
+  --color-success: #287A57;
+  --color-success-soft: #EAF6EF;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-pill: 999px;
+  --shadow-card: 0 8px 28px rgba(24, 34, 48, 0.07);
+  --container-width: 760px;
+
+  --font-ui: Inter, system-ui, -apple-system, BlinkMacSystemFont,
+             "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco,
+               Consolas, "Liberation Mono", monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --heading-lg: 1.5rem;
+  --heading-xl: 2rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  background: var(--color-bg);
+}
+
+.kickstand-app {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-5) var(--space-7);
+}
+
+.kickstand-header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+
+.kickstand-wordmark {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.kickstand-tagline {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.kickstand-intro {
+  margin-top: var(--space-6);
+}
+
+.kickstand-intro h1 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--heading-lg);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.kickstand-intro p {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+.kickstand-input {
+  margin-top: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-3);
+}
+
+.kickstand-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-height: 160px;
+  padding: var(--space-5);
+  background: var(--color-surface-muted);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.kickstand-dropzone:hover,
+.kickstand-dropzone:focus-within {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.kickstand-dropzone-hint {
+  font-size: var(--text-base);
+  font-weight: 500;
+}
+
+.kickstand-dropzone-formats {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+}
+
+.kickstand-choose-button {
+  align-self: flex-start;
+  padding: var(--space-2) var(--space-4);
+  font: inherit;
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.kickstand-choose-button:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.kickstand-preview-section {
+  margin-top: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.kickstand-preview-frame {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.kickstand-preview {
+  max-width: 100%;
+  max-height: 480px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+}
+
+.kickstand-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.kickstand-popout-button {
+  padding: var(--space-2) var(--space-5);
+  font: inherit;
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: #FFFFFF;
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.kickstand-popout-button:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.kickstand-popout-button:disabled {
+  background: var(--color-surface-muted);
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
+}
+
+.kickstand-secondary-button {
+  padding: var(--space-2) var(--space-4);
+  font: inherit;
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.kickstand-secondary-button:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.kickstand-status {
+  margin: var(--space-5) 0 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.kickstand-privacy {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+@media (max-width: 520px) {
+  .kickstand-app {
+    padding: var(--space-5) var(--space-4) var(--space-6);
+  }
+
+  .kickstand-intro h1 {
+    font-size: var(--text-xl);
+  }
+}
