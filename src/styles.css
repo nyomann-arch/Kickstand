@@ -131,6 +131,12 @@ body {
   background: var(--color-primary-soft);
 }
 
+.kickstand-dropzone.is-drag-over {
+  border-style: solid;
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
 .kickstand-dropzone-hint {
   font-size: var(--text-base);
   font-weight: 500;

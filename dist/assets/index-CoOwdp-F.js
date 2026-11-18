@@ -1,0 +1,33 @@
+(function(){const t=document.createElement("link").relList;if(t&&t.supports&&t.supports("modulepreload"))return;for(const o of document.querySelectorAll('link[rel="modulepreload"]'))i(o);new MutationObserver(o=>{for(const r of o)if(r.type==="childList")for(const l of r.addedNodes)l.tagName==="LINK"&&l.rel==="modulepreload"&&i(l)}).observe(document,{childList:!0,subtree:!0});function n(o){const r={};return o.integrity&&(r.integrity=o.integrity),o.referrerPolicy&&(r.referrerPolicy=o.referrerPolicy),o.crossOrigin==="use-credentials"?r.credentials="include":o.crossOrigin==="anonymous"?r.credentials="omit":r.credentials="same-origin",r}function i(o){if(o.ep)return;o.ep=!0;const r=n(o);fetch(o.href,r)}})();const x=`
+:root {
+  --pip-bg: #171A20;
+  --pip-image-padding: 10px;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--pip-bg);
+}
+
+.pip-stage {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--pip-image-padding);
+}
+
+.pip-image {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+`,F=new Set(["image/png","image/jpeg","image/webp"]),M=20*1024*1024,B=640,O=480,h=document.getElementById("fileInput"),g=document.getElementById("dropzoneLabel"),S=document.getElementById("chooseButton"),R=document.getElementById("replaceButton"),k=document.getElementById("removeButton"),m=document.getElementById("popoutButton"),D=document.getElementById("previewSection"),d=document.getElementById("previewImage"),A=document.getElementById("statusMessage"),I="documentPictureInPicture"in window;let s=null,L=0,b=0,f=null,c=null,p=!1,P=0,y=!1;function a(e){A.textContent=e}function T(){return f!==null}function u(){const e=s!==null,t=T(),n=e&&I&&!p&&!t;m.disabled=!n,p?m.textContent="Opening…":t?m.textContent="PiP active":m.textContent="Pop Out",I?t&&a("Floating window is open. Keep this tab open."):a("This browser does not support Document Picture-in-Picture. Preview only.")}function W(){const e=L||d.naturalWidth||B,t=b||d.naturalHeight||O,n=Math.min(B/e,O/t,1);return{width:Math.max(1,Math.round(e*n)),height:Math.max(1,Math.round(t*n))}}function j(e){var n;const t=(n=e.type)==null?void 0:n.toLowerCase();return t==="image/jpg"?"image/jpeg":F.has(t)?t:null}function z(e){return new Promise((t,n)=>{const i=new Image;i.onload=()=>{i.naturalWidth>0&&i.naturalHeight>0?t({width:i.naturalWidth,height:i.naturalHeight}):n(new Error("Image has no dimensions"))},i.onerror=()=>n(new Error("Image could not be decoded")),i.src=e})}function _(e){e&&queueMicrotask(()=>URL.revokeObjectURL(e))}function H(e){if(e.documentElement){if(!e.head){const t=e.createElement("head");e.documentElement.insertBefore(t,e.documentElement.firstChild)}if(!e.body){const t=e.createElement("body");e.documentElement.appendChild(t)}}}async function v(e){if(!e)return;const t=++P;if(!j(e)){a("This image type is not supported. Use PNG, JPG, or WebP.");return}if(e.size===0){a("This file is empty. Choose a valid image.");return}if(e.size>M){a("This image is too large. The maximum size is 20 MB.");return}const n=URL.createObjectURL(e);a("Checking image…");let i;try{i=await z(n)}catch{URL.revokeObjectURL(n),t===P&&a("The image could not be loaded. Try another file.");return}if(t!==P){URL.revokeObjectURL(n);return}const o=s,r=e.name||"Image preview";s=n,L=i.width,b=i.height,D.hidden=!1,d.src=n,d.alt=r,c&&(c.src=n,c.alt=r),_(o),a(T()?"Floating window is open. Keep this tab open.":"Image ready to float."),u()}function U(){const e=s;s=null,L=0,b=0,d.removeAttribute("src"),d.alt="Image preview",D.hidden=!0;const t=f,n=c;if(t){y=!0,n==null||n.removeAttribute("src"),f=null,c=null;try{t.close()}catch(i){y=!1,console.error("Could not close floating window:",i)}}e&&URL.revokeObjectURL(e),a("Image removed."),u()}function w(e){var i,o,r;const t=(i=e.dataTransfer)==null?void 0:i.types;return(t?Array.prototype.includes.call(t,"Files"):!1)||(((r=(o=e.dataTransfer)==null?void 0:o.files)==null?void 0:r.length)??0)>0}function N(e){return e.relatedTarget instanceof Node&&g.contains(e.relatedTarget)}function E(e){g.classList.toggle("is-drag-over",e)}document.addEventListener("paste",e=>{var o,r;const t=e.clipboardData,n=t==null?void 0:t.items;if(n){for(const l of n)if(l.kind==="file"){const C=(o=l.getAsFile)==null?void 0:o.call(l);if(C){e.preventDefault(),v(C);return}}}const i=(r=t==null?void 0:t.files)==null?void 0:r[0];i&&(e.preventDefault(),v(i))});h.addEventListener("change",()=>{var e;v((e=h.files)==null?void 0:e[0]),h.value=""});g.addEventListener("dragenter",e=>{w(e)&&(e.preventDefault(),E(!0))});g.addEventListener("dragover",e=>{w(e)&&(e.preventDefault(),e.dataTransfer.dropEffect="copy",E(!0))});g.addEventListener("dragleave",e=>{N(e)||E(!1)});g.addEventListener("drop",e=>{var t,n;w(e)&&(e.preventDefault(),E(!1),v((n=(t=e.dataTransfer)==null?void 0:t.files)==null?void 0:n[0]))});window.addEventListener("dragover",e=>{w(e)&&e.preventDefault()});window.addEventListener("drop",e=>{w(e)&&e.preventDefault()});S.addEventListener("click",()=>h.click());R.addEventListener("click",()=>h.click());k.addEventListener("click",U);d.addEventListener("error",()=>{s&&(U(),a("The image could not be loaded. Try another file."))});async function q(){if(!I||p||T()||!s)return;p=!0,u(),a("Opening floating window…");let e;try{const{width:t,height:n}=W();e=await window.documentPictureInPicture.requestWindow({width:t,height:n})}catch(t){console.error("Document PiP request failed:",t),a("Could not open the floating window. Try again."),p=!1,u();return}try{if(!s||e.closed){try{e.close()}catch(r){console.error("Could not close unused floating window:",r)}a(s?"Could not open the floating window. Try again.":"Image removed.");return}f=e;const t=e.document;if(!t)throw new Error("PiP document unavailable");H(t);const n=t.createElement("style");n.textContent=x,t.head.appendChild(n);const i=t.createElement("div");i.className="pip-stage";const o=t.createElement("img");o.className="pip-image",o.src=s,o.alt=d.alt||"Floating image preview",i.appendChild(o),t.body.appendChild(i),c=o,e.addEventListener("pagehide",()=>{const r=y;y=!1,f=null,c=null,u(),r||a(s?"Floating window closed. Your image is still here.":"Floating window closed.")}),a("Floating window is open. Keep this tab open.")}catch(t){console.error("Document PiP setup failed:",t),f=null,c=null;try{e.close()}catch(n){console.error("Could not close failed floating window:",n)}a("Could not open the floating window. Try again.")}finally{p=!1,u()}}m.addEventListener("click",()=>{q()});window.addEventListener("pagehide",e=>{!e.persisted&&s&&(URL.revokeObjectURL(s),s=null)});u();
