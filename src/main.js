@@ -40,6 +40,8 @@ const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20 MiB provisional limit
 
 const PIP_MAX_WIDTH = 640;
 const PIP_MAX_HEIGHT = 480;
+const PIP_MIN_WIDTH = 240;
+const PIP_MIN_HEIGHT = 180;
 
 const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');
@@ -96,10 +98,10 @@ function updateControls() {
 function computePipSize() {
   const w = currentImageWidth || previewImage.naturalWidth || PIP_MAX_WIDTH;
   const h = currentImageHeight || previewImage.naturalHeight || PIP_MAX_HEIGHT;
-  const scale = Math.min(PIP_MAX_WIDTH / w, PIP_MAX_HEIGHT / h, 1);
+  const scale = Math.min(PIP_MAX_WIDTH / w, PIP_MAX_HEIGHT / h);
   return {
-    width: Math.max(1, Math.round(w * scale)),
-    height: Math.max(1, Math.round(h * scale)),
+    width: Math.min(PIP_MAX_WIDTH, Math.max(PIP_MIN_WIDTH, Math.round(w * scale))),
+    height: Math.min(PIP_MAX_HEIGHT, Math.max(PIP_MIN_HEIGHT, Math.round(h * scale))),
   };
 }
 
@@ -395,8 +397,9 @@ async function openPiP() {
     pipImageElement = img;
 
     pipWin.addEventListener('pagehide', () => {
-      const suppressStatus = suppressPiPClosedStatus;
+      const suppressStatus = suppressPiPClosedStatus || pipWin.__kickstandSuppressCloseStatus;
       suppressPiPClosedStatus = false;
+      pipWin.__kickstandSuppressCloseStatus = false;
       pipWindow = null;
       pipImageElement = null;
       updateControls();
@@ -413,6 +416,7 @@ async function openPiP() {
     console.error('Document PiP setup failed:', error);
     pipWindow = null;
     pipImageElement = null;
+    pipWin.__kickstandSuppressCloseStatus = true;
     try {
       pipWin.close();
     } catch (closeError) {
