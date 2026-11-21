@@ -1,4 +1,6 @@
-# Kickstand
+<p align="center">
+  <img src="dist/favicon.svg" width="400">
+</p>
 
 > **Keep your reference in sight.**
 
